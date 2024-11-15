@@ -1,0 +1,275 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_sharepointonline": {
+        "runtimeSource": "invoker",
+        "connection": {
+          "connectionReferenceLogicalName": "dev_sharedsharepointonline_1f99d"
+        },
+        "api": {
+          "name": "shared_sharepointonline"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "RedactionSiteCollection (dev_RedactionSiteCollection)": {
+          "defaultValue": "https://pucelikenterprise.sharepoint.com/sites/HumanResources",
+          "type": "String",
+          "metadata": {
+            "schemaName": "dev_RedactionSiteCollection",
+            "description": "Site Collection"
+          }
+        },
+        "RedactionAPI (dev_RedactionAPI)": {
+          "defaultValue": "https://redact.azurewebsites.net/api/RedactPDF",
+          "type": "String",
+          "metadata": {
+            "schemaName": "dev_RedactionAPI",
+            "description": "URL to the redaction Azure Function"
+          }
+        },
+        "RedactedLibrary (dev_RedactedLibrary)": {
+          "defaultValue": "bbbc5ec3-1493-410b-8172-642afc41f0dd",
+          "type": "String",
+          "metadata": {
+            "schemaName": "dev_RedactedLibrary",
+            "description": "Library where the final redacted file is placed."
+          }
+        }
+      },
+      "triggers": {
+        "manual": {
+          "metadata": {
+            "operationMetadataId": "d9cd5f65-04a9-49de-aae0-da8f313ab8f3"
+          },
+          "type": "Request",
+          "kind": "PowerApp",
+          "inputs": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "FileContentID_FileIdentifier": {
+                  "type": "string",
+                  "description": "Select a file.",
+                  "x-ms-powerflows-param-ispartial": false
+                },
+                "PhraseToRedact_Value": {
+                  "type": "string",
+                  "description": "Enter variable value",
+                  "x-ms-powerflows-param-ispartial": false
+                }
+              },
+              "required": [
+                "FileContentID_FileIdentifier",
+                "PhraseToRedact_Value"
+              ]
+            }
+          }
+        }
+      },
+      "actions": {
+        "FileContentID": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "260de062-3699-4f6f-870e-01110c676283"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetFileContent"
+            },
+            "parameters": {
+              "dataset": "@parameters('RedactionSiteCollection (dev_RedactionSiteCollection)')",
+              "id": "@triggerBody()['FileContentID_FileIdentifier']",
+              "inferContentType": true
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          }
+        },
+        "HTTP": {
+          "runAfter": {
+            "FileContent": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "67b6b2bb-1188-4f6c-9bf2-89e640aaa117"
+          },
+          "type": "Http",
+          "inputs": {
+            "method": "POST",
+            "uri": "@parameters('RedactionAPI (dev_RedactionAPI)')",
+            "body": {
+              "$content-type": "multipart/form-data",
+              "$multipart": [
+                {
+                  "body": "@{variables('PhraseToRedact')}",
+                  "headers": {
+                    "Content-Disposition": "form-data; name=\"redact\""
+                  }
+                },
+                {
+                  "headers": {
+                    "Content-Disposition": "form-data; name=\"file\";filename=@{outputs('FileMetadataID')?['body/DisplayName']}"
+                  },
+                  "body": "@outputs('FileContent')"
+                }
+              ]
+            }
+          }
+        },
+        "FileMetadataID": {
+          "runAfter": {
+            "FileContentID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "4546c6bb-0940-43fe-be32-4744b8c29383"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "GetFileMetadata"
+            },
+            "parameters": {
+              "dataset": "@parameters('RedactionSiteCollection (dev_RedactionSiteCollection)')",
+              "id": "@triggerBody()['FileContentID_FileIdentifier']"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          }
+        },
+        "InitializeVariable": {
+          "runAfter": {
+            "FileMetadataID": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "34de433a-ce90-4caf-b384-5725afdd5d07"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "PhraseToRedact",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "PhraseToRedact": {
+          "runAfter": {
+            "InitializeVariable": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3a5b458d-aeab-4dfc-9566-fb74f6d167ee"
+          },
+          "type": "SetVariable",
+          "inputs": {
+            "name": "PhraseToRedact",
+            "value": "@{triggerBody()['PhraseToRedact_Value']}"
+          }
+        },
+        "Create_file": {
+          "runAfter": {
+            "HTTP": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0917f5aa-0216-4615-a308-fb74fae31491"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "CreateFile"
+            },
+            "parameters": {
+              "dataset": "@parameters('RedactionSiteCollection (dev_RedactionSiteCollection)')",
+              "folderPath": "/EmployeeContractsRedacted",
+              "name": "@{outputs('FileMetadataID')?['body/Name']}-REDACTED.pdf",
+              "body": "@body('HTTP')"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          },
+          "runtimeConfiguration": {
+            "contentTransfer": {
+              "transferMode": "Chunked"
+            }
+          }
+        },
+        "FileContent": {
+          "runAfter": {
+            "PhraseToRedact": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6c8f10d5-fad7-4ca1-b6af-9d945143bf1e"
+          },
+          "type": "Compose",
+          "inputs": "@base64ToBinary(body('FileContentID')?['$content'])"
+        },
+        "Update_file_properties": {
+          "runAfter": {
+            "Create_file": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bf2de00a-5bd6-488d-885a-f1191bc7ac66"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+              "connectionName": "shared_sharepointonline",
+              "operationId": "PatchFileItem"
+            },
+            "parameters": {
+              "dataset": "@parameters('RedactionSiteCollection (dev_RedactionSiteCollection)')",
+              "table": "@parameters('RedactedLibrary (dev_RedactedLibrary)')",
+              "id": "@outputs('Create_file')?['body/ItemId']",
+              "item/OriginalDocumentID": "@outputs('FileMetadataID')?['body/ItemId']"
+            },
+            "authentication": {
+              "value": "@json(decodeBase64(triggerOutputs().headers['X-MS-APIM-Tokens']))['$ConnectionKey']",
+              "type": "Raw"
+            }
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}
