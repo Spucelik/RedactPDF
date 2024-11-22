@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CanvasApp xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>dev_redactionpoc_652ce</Name>
+  <AppVersion>2023-01-19T14:25:27Z</AppVersion>
+  <Status>Ready</Status>
+  <CreatedByClientVersion>3.22122.15.0</CreatedByClientVersion>
+  <MinClientVersion>3.22122.15.0</MinClientVersion>
+  <Tags>{"primaryDeviceWidth":"1366","primaryDeviceHeight":"768","supportsPortrait":"true","supportsLandscape":"true","primaryFormFactor":"Tablet","publisherVersion":"3.22122.15","minimumRequiredApiVersion":"2.2.0","hasComponent":"false","hasUnlockedComponent":"false","isUnifiedRootApp":"false","sienaVersion":"20221128T214259Z-3.22111.19.0"}</Tags>
+  <IsCdsUpgraded>0</IsCdsUpgraded>
+  <GalleryItemId xsi:nil="true"></GalleryItemId>
+  <BackgroundColor>RGBA(0,176,240,1)</BackgroundColor>
+  <DisplayName>Redaction POC</DisplayName>
+  <Description xsi:nil="true"></Description>
+  <CommitMessage xsi:nil="true"></CommitMessage>
+  <Publisher xsi:nil="true"></Publisher>
+  <AuthorizationReferences>[]</AuthorizationReferences>
+  <ConnectionReferences>{"158021ba-f2a9-410b-9cb0-a0623d4891d1":{"id":"/providers/microsoft.powerapps/apis/shared_sharepointonline","displayName":"SharePoint","iconUri":"https://connectoricons-prod.azureedge.net/u/juanq/gateway/greyhound/3000.150.11/1.0.1613.3116/sharepointonline/icon.png","dataSources":["Redaction","EmployeeContractsFF","EmployeeContractsRedacted"],"dependencies":[],"dependents":["311074de-5463-4fbd-8414-0bbb84aede8d","6efb239d-9a13-4d6c-a36e-e25fe67cc99d"],"parameterHints":{},"parameterHintsV2":{},"isOnPremiseConnection":false,"bypassConsent":false,"dataSets":{"https://pucelikenterprise.sharepoint.com/teams/Legal":{"dataSources":{"Redaction":{"tableName":"147990d1-29ed-4871-9a25-0af32cfa21a4"}}},"https://pucelikenterprise.sharepoint.com/sites/HumanResources":{"dataSources":{"EmployeeContractsFF":{"tableName":"54b7116a-e573-4030-a2ea-7ba113f83050"},"EmployeeContractsRedacted":{"tableName":"bbbc5ec3-1493-410b-8172-642afc41f0dd"}}}},"apiTier":"Standard","actions":["providers/PowerPlatform.Governance/Operations/Read"]},"311074de-5463-4fbd-8414-0bbb84aede8d":{"id":"/providers/microsoft.powerapps/apis/shared_logicflows","displayName":"Logic flows","iconUri":"https://connectoricons-prod.azureedge.net/releases/v1.0.1534/1.0.1534.2605/logicflows/icon.png","dataSources":["GetFilePDF"],"dependencies":["158021ba-f2a9-410b-9cb0-a0623d4891d1"],"dependents":[],"parameterHints":{"workflowName":{"value":"14e07d30-c7c8-4c88-83a9-a9af98f67c87"},"workflowEntityId":{},"158021ba-f2a9-410b-9cb0-a0623d4891d1":{"value":"shared_sharepointonline"}},"parameterHintsV2":{"workflowName":{"value":"14e07d30-c7c8-4c88-83a9-a9af98f67c87"},"workflowEntityId":{},"shared_sharepointonline":{"value":"158021ba-f2a9-410b-9cb0-a0623d4891d1"}},"isOnPremiseConnection":false,"bypassConsent":false,"dataSets":{},"apiTier":"Standard","actions":["Run"]},"6efb239d-9a13-4d6c-a36e-e25fe67cc99d":{"id":"/providers/microsoft.powerapps/apis/shared_logicflows","displayName":"Logic flows","iconUri":"https://connectoricons-prod.azureedge.net/releases/v1.0.1534/1.0.1534.2605/logicflows/icon.png","dataSources":["Redact"],"dependencies":["158021ba-f2a9-410b-9cb0-a0623d4891d1"],"dependents":[],"parameterHints":{"workflowName":{"value":"0942003f-f6a0-4507-96e4-8e8714d21696"},"workflowEntityId":{},"158021ba-f2a9-410b-9cb0-a0623d4891d1":{"value":"shared_sharepointonline"}},"parameterHintsV2":{"workflowName":{"value":"0942003f-f6a0-4507-96e4-8e8714d21696"},"workflowEntityId":{},"shared_sharepointonline":{"value":"158021ba-f2a9-410b-9cb0-a0623d4891d1"}},"isOnPremiseConnection":false,"bypassConsent":false,"dataSets":{},"apiTier":"Standard","actions":["Run"]}}</ConnectionReferences>
+  <DatabaseReferences>{}</DatabaseReferences>
+  <AppComponents>[]</AppComponents>
+  <AppComponentDependencies>[]</AppComponentDependencies>
+  <CanConsumeAppPass>1</CanConsumeAppPass>
+  <CanvasAppType>0</CanvasAppType>
+  <BypassConsent>0</BypassConsent>
+  <AdminControlBypassConsent>0</AdminControlBypassConsent>
+  <EmbeddedApp xsi:nil="true"></EmbeddedApp>
+  <IntroducedVersion>1.0</IntroducedVersion>
+  <CdsDependencies>{"cdsdependencies":[]}</CdsDependencies>
+  <IsCustomizable>1</IsCustomizable>
+  <BackgroundImageUri>/CanvasApps/dev_redactionpoc_652ce_BackgroundImageUri</BackgroundImageUri>
+  <DocumentUri>/CanvasApps/dev_redactionpoc_652ce_DocumentUri.msapp</DocumentUri>
+</CanvasApp>
