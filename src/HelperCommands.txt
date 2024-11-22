@@ -1,1 +1,14 @@
-pac solution export --name <solution-name> --path <path-to-export>
+//Export the solution from the Power Platform
+pac solution export --name Redaction --path "C:\Users\stpuceli\OneDrive - Microsoft\Apps\RedactPDF\RedactPDF"
+
+//unpack the solution to get the source files.
+pac solution unpack --zipfile "C:\Users\stpuceli\OneDrive - Microsoft\Apps\RedactPDF\RedactPDF\Redaction.zip" --folder "C:\Users\stpuceli\OneDrive - Microsoft\Apps\RedactPDF\RedactPDF\src"
+
+git add .
+git commit -m "Initial Upload"
+
+git push origin src
+
+
+//When I have made changes to the .msapp file in PowerApps, export the canvas app to the cloned repo and do a commit and PR
+pac canvas export --name "Redaction POC" --output "C:\Users\stpuceli\OneDrive - Microsoft\Apps\RedactPDF\RedactPDF\src\CanvasApps"
