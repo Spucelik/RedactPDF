@@ -1,5 +1,0 @@
-pac solution unpack --zipfile "C:\Users\stpuceli\OneDrive - Microsoft\Apps\RedactPDF\RedactPDF\Redaction_1_0_0_1_managed.zip" --folder "C:\Users\stpuceli\OneDrive - Microsoft\Apps\RedactPDF\RedactPDF\src" --packagetype Managed
-
-
-
-"C:\Users\stpuceli\OneDrive - Microsoft\Apps\RedactPDF\RedactPDF\Redaction_1_0_0_1_managed.zip"
